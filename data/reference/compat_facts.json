@@ -1,0 +1,983 @@
+{
+  "meta": {
+    "generated": "2026-10-19",
+    "purpose": "Reference facts for src/compat.js and src/physics.js (goggle/air-unit compatibility, RC interoperability, per-class defaults, battery and connector rules).",
+    "conventions": "Weights in grams. Fields listed in an entry's `est` array are estimates or derived values, not published specs. 'ship' weights quoted from store catalogs are Shopify shipping weights (rounded), used only as an upper bound.",
+    "verification": "Adversarial re-check 2026-10-19 against dji.com (O4 specs/FAQ, Goggles 3 and N3 FAQs), caddxfpv.com (Walksnail kit and goggle pages), hd-zero.com (Race V3, Freestyle V2), expresslrs.org, frsky-rc.com, fpvknowitall.com, and the RaceDayQuads / NewBeeDrone / Five33 product text captured in .scratch/index. getfpv.com refused automated fetches (HTTP 403), so claims that rested only on GetFPV were either re-sourced, softened or removed; see per-entry notes."
+  },
+
+  "video_systems": {
+    "analog": {
+      "label": "Analog 5.8 GHz",
+      "goggles_native": [
+        "HDZero Goggle 2 (built-in analog receiver)",
+        "HDZero BoxPro (built-in analog receiver)",
+        "HDZero BoxPro+ (built-in analog receiver)",
+        "Skyzone SKY04X Pro (built-in 48CH V3.3 Steadyview receiver)",
+        "Skyzone SKY04O Pro (48CH receiver module included)",
+        "Skyzone Cobra X V4 (48CH diversity receiver module included)",
+        "Fat Shark Dominator HDO 2.1 (sold with Fat Shark 32CH 5.8 GHz receiver module)",
+        "EMAX Transporter 2 (built-in 5.8 GHz receiver, box goggles)",
+        "Eachine EV800D (box goggles, 40CH true diversity)"
+      ],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "HDZero Goggle (original)", "requirement": "HDZero Analog Expansion Module V2 plus a Fat Shark-style analog receiver module (e.g. ImmersionRC rapidFIRE, TBS Fusion); the expansion module is sold without a receiver"},
+        {"goggles": "HDZero Goggle 2", "requirement": "Optional: its add-on analog module bay accepts most analog modules for better reception than the built-in receiver"},
+        {"goggles": "Fat Shark Dominator HDO+ (sold without a receiver)", "requirement": "Analog receiver module in the RF module bay (3.5 mm AV in also available)"},
+        {"goggles": "Walksnail Avatar HD Goggles X", "requirement": "External analog receiver into the AV/CVBS input (Caddx: 'Supports HDMI, AV, and CVBS video input')"},
+        {"goggles": "DJI FPV Goggles V1/V2", "requirement": "Fat Shark-style analog module on an adapter that feeds the goggles' AV input (e.g. 'Analog FPV FatShark Module Adapter V3 for DJI Digital FPV Goggles'). Note: the Flywoo 1G2-1G3 VRX sold for DJI FPV Goggles V2 is a 1.2/1.3 GHz receiver and does not receive 5.8 GHz analog"},
+        {"goggles": "Orqa FPV.One / FPV.One Pilot (MK2)", "requirement": "Analog module in the module bay (e.g. ImmersionRC rapidFIRE with Orqa receiver module, natively integrated)"},
+        {"goggles": "Fat Shark Dominator HDO 2 / 2.1 (bare)", "requirement": "Analog receiver module in the modular receiver bay"}
+      ],
+      "caveats": [
+        "DJI Goggles 3 and DJI Goggles N3 do not support analog video (both FAQs answer 'No'). DJI Goggles 2 and Integra list no analog input on the pages checked.",
+        "Walksnail Avatar HD Goggles L list no AV input or module bay (I/O is a 4-pin 3.5 mm plug, DC 5.5x2.1 mm and microSD only).",
+        "Fat Shark Dominator HD (Walksnail-based) has no analog module ('There is not an analog Module for these', RDQ Q&A).",
+        "HDZero goggles 'sometimes glitch out when analog signal is weak' (fpvknowitall).",
+        "HDZero goggles and the Analog Expansion Module add a real-time deinterlacer for analog input; analog camera latency is listed as 3 ms on BoxPro/BoxPro+."
+      ],
+      "sources": [
+        "https://www.flyfive33.com/products/hdzero-goggle-2",
+        "https://www.racedayquads.com/products/hdzero-boxpro-goggles",
+        "https://www.racedayquads.com/products/hdzero-boxpro-goggles-1",
+        "https://www.newbeedrone.com/products/hdzero-boxpro-boxpro",
+        "https://www.racedayquads.com/products/skyzone-sky04x-pro-oled-diversity-5-8ghz-fpv-goggles-black-matte",
+        "https://www.newbeedrone.com/products/skyzone-sky04o-pro-fpv-goggle-with-oled-screen-and-60fps-dvr-steadyview-receive",
+        "https://www.racedayquads.com/products/skyzone-cobra-x-v2-diversity-5-8ghz-fpv-goggles-w-60-fps-dvr",
+        "https://www.racedayquads.com/products/fat-shark-dominator-hdo2-fpv-goggles",
+        "https://www.racedayquads.com/products/fat-shark-dominator-hdo-fpv-goggles",
+        "https://www.racedayquads.com/products/emax-transporter-2-5-8ghz-fpv-goggles-w-dvr-removable-screen",
+        "https://www.racedayquads.com/products/ev800d-5-8g-40ch-diversity-fpv-goggles-with-dvr",
+        "https://www.racedayquads.com/products/hdzero-goggle-analog-expansion-module-v2-w-wifi",
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-goggles-x-only",
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-goggles-l-only",
+        "https://www.racedayquads.com/products/analog-fpv-fatshark-module-adapter-v3-for-dji-digital-fpv-goggles",
+        "https://www.racedayquads.com/products/flywoo-draft-2",
+        "https://www.racedayquads.com/products/immersionrc-rapidfire-w-analog-orqa-receiver-module",
+        "https://www.newbeedrone.com/products/orqa-fpv-one-mk2-pilot-goggles-5-free-newbeedrone-goggle-strap",
+        "https://www.racedayquads.com/products/fat-shark-dominator-hd-fpv-goggles",
+        "https://www.dji.com/goggles-3/faq",
+        "https://www.dji.com/goggles-n3/faq",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "hdzero": {
+      "label": "HDZero",
+      "goggles_native": [
+        "HDZero Goggle",
+        "HDZero Goggle 2",
+        "HDZero BoxPro",
+        "HDZero BoxPro+",
+        "EMAX Transporter 2 HD (designed with HDZero; 720p 60 Hz screen)"
+      ],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "Any goggles with HDMI input (e.g. Skyzone SKY04X Pro, Walksnail Avatar HD Goggles X)", "requirement": "HDZero VRX4 receiver module feeding the goggles' HDMI input (RDQ: 'Compatible with any goggles using HDMI input')"}
+      ],
+      "caveats": [
+        "All HDZero VTXs released to date work with all HDZero goggles released to date (fpvknowitall).",
+        "Two camera interfaces: MIPI VTXs (Race V3, Freestyle V2, Whoop V2, Whoop Lite) take MIPI cameras (Nano V3, Nano 90, Micro V3); the ECO VTX and HDZero AIO boards take the single-wire HD-composite cameras (ECO, Lux). A regular analog camera works with neither.",
+        "Modes: 540p90 / 720p60 / 1080p30 on Race V3 and Whoop V2; Freestyle V2 adds 540p60. Glass-to-glass latency ~3 ms on Goggle 2; BoxPro lists 4 ms with HDZero cameras.",
+        "Whoop V2 VTX: no reverse-polarity protection; needs >=1.5 A from a 5 V pad; direct 1S power can dip below 3 V on punch-outs and drop video; add an external capacitor on 3S. Race V3 has reverse-polarity protection.",
+        "No DJI interoperability; Walksnail is viewable on HDZero goggles only through a Walksnail VRX's HDMI output."
+      ],
+      "sources": [
+        "https://www.flyfive33.com/products/hdzero-goggle-2",
+        "https://www.racedayquads.com/products/hdzero-boxpro-goggles",
+        "https://www.racedayquads.com/products/emax-transporter-2-hd-fpv-goggles-monitor-w-dvr-for-hdzero",
+        "https://www.racedayquads.com/products/hdzero-vrx-digital-hd-receiver-module",
+        "https://www.racedayquads.com/products/hdzero-whoop-v2-vtx",
+        "https://www.hd-zero.com/product-page/hdzero-race-v3-vtx",
+        "https://www.hd-zero.com/product-page/freestyle-v2-vtx",
+        "https://www.racedayquads.com/products/hdzero-lux-camera",
+        "https://www.newbeedrone.com/products/hdzero-eco-bundle",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "dji-o4": {
+      "label": "DJI O4 (O4 Air Unit / 'O4 Lite')",
+      "goggles_native": ["DJI Goggles 3", "DJI Goggles N3"],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "DJI Goggles 2", "requirement": "Update firmware; DJI RC must be FPV Remote Controller 2; no Racing Mode (Goggles 3/N3 only) and max 40 MHz channel bandwidth (60 MHz listed only for Goggles 3/N3); latency <35 ms at 1080p/100fps"},
+        {"goggles": "DJI Goggles Integra", "requirement": "Update firmware; DJI RC must be FPV Remote Controller 2; no Racing Mode and max 40 MHz channel bandwidth; latency <35 ms at 1080p/100fps"}
+      ],
+      "caveats": [
+        "Not compatible with DJI FPV Goggles V1/V2 (not listed by DJI) or any third-party goggles (DJI O4 FAQ: 'Third-party flight goggles are not supported').",
+        "Racing Mode needs Goggles 3 or N3. N3 has a 60 Hz screen and ~4 ms more latency than G3/G2/Integra (fpvknowitall; DJI lists 20 ms on G3 vs 24 ms on N3).",
+        "Rated 3.7-13.2 V, but fpvknowitall reports dropout around 3.8 V; on 1S it needs a step-up regulator or it 'will die out about halfway through the pack'.",
+        "FC firmware for OSD: Betaflight 4.3.0+ or INAV 8.0.1+. Using the DJI FPV Remote Controller needs the FC receiver protocol set to SBUS; other radios need a separate receiver.",
+        "Above 25 C ambient DJI recommends external cooling and heat-conductive material to the frame; when hot the bitrate drops to a maximum of 50 Mbps.",
+        "Camera module (13.44 x 12.36 x 16.50 mm) and transmission module differ from O3 (DJI FAQ: O4 cannot be installed directly on O3 frames); use O4-specific mounts, adapter plates or 18/20 mm camera shells.",
+        "No aftermarket cameras exist for O3/O4 air units (fpvknowitall); third-party products are lens or shell swaps (e.g. Flywoo O4 Wide 159 deg lens)."
+      ],
+      "sources": [
+        "https://www.dji.com/o4-air-unit/specs",
+        "https://www.dji.com/o4-air-unit/faq",
+        "https://www.dji.com/goggles-3/faq",
+        "https://www.dji.com/goggles-n3/faq",
+        "https://www.racedayquads.com/products/dji-o4-air-unit",
+        "https://www.racedayquads.com/products/flywoo-dji-o4-wide-air-unit-set",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "dji-o4-pro": {
+      "label": "DJI O4 Pro (O4 Air Unit Pro)",
+      "goggles_native": ["DJI Goggles 3", "DJI Goggles N3"],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "DJI Goggles 2", "requirement": "Update firmware; DJI RC must be FPV Remote Controller 2; no Racing Mode; latency <30 ms at 1080p/100fps"},
+        {"goggles": "DJI Goggles Integra", "requirement": "Update firmware; DJI RC must be FPV Remote Controller 2; no Racing Mode; latency <30 ms at 1080p/100fps"}
+      ],
+      "caveats": [
+        "Not compatible with DJI FPV Goggles V1/V2 or third-party goggles.",
+        "Camera is 20 mm wide but 25.55 mm deep and 23.3 mm tall - 'very large and doesn't fit into most frames unless they have been specifically adapted' (fpvknowitall). DJI/RDQ: fits frames of 3 inches and above.",
+        "Input 7.4-26.4 V (2S-6S); 8S-12S builds need a separate regulator. 2T2R with two antennas (~2.1 g each).",
+        "Same SBUS requirement for the DJI FPV Remote Controller and same Betaflight 4.3.0+/INAV 8.0.1+ requirement as O4."
+      ],
+      "sources": [
+        "https://www.dji.com/o4-air-unit/specs",
+        "https://www.dji.com/o4-air-unit/faq",
+        "https://www.racedayquads.com/products/dji-o4-air-unit-pro",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "dji-o3": {
+      "label": "DJI O3 Air Unit",
+      "goggles_native": ["DJI Goggles 2", "DJI Goggles Integra"],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "DJI Goggles 3", "requirement": "Goggles 3 firmware v01.00.0300 or later and current O3 firmware (RDQ Goggles 3 listing). DJI lists Goggles 3 with FPV Remote Controller 3; the RC pairing for O3-on-G3 was not stated on the pages checked"},
+        {"goggles": "DJI FPV Goggles V2", "requirement": "Listed as compatible with the O3 camera module and air unit; update goggles and air unit firmware; live view up to 810p/120fps with latency <28 ms (810p/60fps <40 ms)"}
+      ],
+      "caveats": [
+        "DJI Goggles N3 do NOT support O3 (N3 FAQ lists only Avata 2, Neo and the O4 series; fpvknowitall: 'the N3 does NOT support the O3 air unit at this time').",
+        "Power: GetFPV's listing says the O3 'can draw close to 2A' (GetFPV not re-fetchable, HTTP 403); FC makers size dedicated O3 rails at 10 V 2-2.5 A (Holybro Kakute G4 AIO, NewBeeDrone BeeBrain). Use a 9-10 V BEC rated >=2 A or power the unit from the battery.",
+        "Receives on 2.4 and 5.8 GHz but transmits only on 5.8 GHz.",
+        "Records 4K at 50/60 fps and 2.7K/1080p up to 100 fps (120 fps with DJI FPV Goggles V2) to 20 GB internal storage.",
+        "Pairs with the DJI FPV Remote Controller 2 (Goggles 2/Integra/FPV Goggles V2); FC receiver protocol must be SBUS."
+      ],
+      "sources": [
+        "https://www.racedayquads.com/products/dji-air-unit-03",
+        "https://www.racedayquads.com/products/dji-o3-air-unit-camera-module",
+        "https://www.racedayquads.com/products/iflight-bnf-nazgul-dc5-eco-6s-5-hd-w-dji-o3-air-unit",
+        "https://www.racedayquads.com/products/holybro-kakute-g4-2-6s-aio-whoop-toothpick-flight-controller-w-f4-am32-35a-32bit-4in1-esc",
+        "https://www.racedayquads.com/products/newbeedrone-beebrain-hd-g4-flight-controller-expresslrs-elrs-2-4g",
+        "https://www.getfpv.com/dji-o3-air-unit.html",
+        "https://www.dji.com/goggles-3/faq",
+        "https://www.dji.com/goggles-n3/faq",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "dji-v1": {
+      "label": "DJI FPV System V1 (DJI FPV Air Unit, Caddx Vista, RunCam Link)",
+      "goggles_native": ["DJI FPV Goggles V1", "DJI FPV Goggles V2"],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "DJI Goggles 2", "requirement": "Firmware update; fpvknowitall: 'the G2 is compatible with the Vista-generation air units'"}
+      ],
+      "caveats": [
+        "DJI Goggles 3 and N3 FAQs list only O3/O4-generation products - treat V1 air units as incompatible with them.",
+        "DJI Goggles Integra compatibility with V1 air units is not stated on the pages checked.",
+        "Vista: 720p/120fps low-latency mode 21-28 ms; FCC/SRRC range 4 km (CE 0.7 km); input 7.4-26.4 V; built-in receiver for the original DJI FPV Remote Controller.",
+        "Legacy system: V1-generation kits are discontinued/out of stock at the stores checked."
+      ],
+      "sources": [
+        "https://www.racedayquads.com/products/caddx-nebula-pro-vista-kit-w-12cm-cable-black",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/",
+        "https://www.dji.com/goggles-3/faq",
+        "https://www.dji.com/goggles-n3/faq"
+      ]
+    },
+
+    "walksnail": {
+      "label": "Walksnail Avatar",
+      "goggles_native": [
+        "Walksnail Avatar HD Goggles X",
+        "Walksnail Avatar HD Goggles L",
+        "Walksnail Avatar HD Goggles (original)",
+        "Fat Shark Dominator HD (Walksnail Avatar-based)",
+        "Fat Shark Recon HD (Walksnail-compatible box goggles, 1080p 60 fps)"
+      ],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "HDZero Goggle / Goggle 2 / BoxPro / BoxPro+", "requirement": "Walksnail Avatar VRX feeding the HDMI input (VRX outputs 720p100; BoxPro lists 100 Hz HDMI input with 1 ms latency)"},
+        {"goggles": "Skyzone SKY04X Pro", "requirement": "Walksnail Avatar VRX feeding HDMI IN (listed as 720P 100FPS)"},
+        {"goggles": "Any goggles/monitor with HDMI input", "requirement": "Walksnail Avatar VRX (HDMI out 1080p60 / 720p100 / 720p60, 7-25.2 V input, ~83 g)"}
+      ],
+      "caveats": [
+        "All Walksnail Avatar goggles are compatible with all Avatar VTXs (fpvknowitall; Goggles X page: 'Fully compatible with all Walksnail VTX Kits'). Older goggles may need a firmware update for newer VTXs (RDQ review of Dominator HD with Nano V3).",
+        "Walksnail ASCENT is a separate system: Ascent goggles are 'Not compatible with Avatar systems', so Ascent and Avatar do not mix.",
+        "Goggles L: 60 Hz LCD, 1080p60/720p60 only, no native aftermarket-antenna support and no AV input.",
+        "Avatar Pro / Nano V3 kit listings: Walksnail recommends a standalone BEC between VTX and power source above 2S.",
+        "Mini 1S VTX runs 3.1-13 V on V3 hardware (3.1-5 V on V2) but 'drops out HARD at 3.1 volts' (fpvknowitall).",
+        "GT/GT2 VTX need 11.1-25.2 V (3S-6S) and are physically larger (GT2 34 x 36 x 23.5 mm with fan)."
+      ],
+      "sources": [
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-goggles-x-only",
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-goggles-l-only",
+        "https://www.caddxfpv.com/products/walksnail-avatar-fpv-vrx-only",
+        "https://www.caddxfpv.com/products/walksnail-ascent-goggles",
+        "https://www.racedayquads.com/products/fat-shark-dominator-hd-fpv-goggles",
+        "https://www.racedayquads.com/products/fat-shark-recon-hd-fpv-goggles",
+        "https://www.racedayquads.com/products/hdzero-boxpro-goggles",
+        "https://www.racedayquads.com/products/skyzone-sky04x-pro-oled-diversity-5-8ghz-fpv-goggles-black-matte",
+        "https://www.racedayquads.com/products/pre-order-walksnail-avatar-hd-pro-kit-20x20-25x25-vtx-kit-w-micro-camera-pro-dual-antennas-version",
+        "https://www.racedayquads.com/products/walksnail-avatar-hd-nano-v3-vtx-kit-w-nano-camera",
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-mini-1s-kit",
+        "https://www.racedayquads.com/products/walksnail-avatar-gt2-kit",
+        "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"
+      ]
+    },
+
+    "openipc": {
+      "label": "OpenIPC (open-source WiFi-based HD)",
+      "goggles_native": [],
+      "goggles_with_module_or_firmware": [
+        {"goggles": "Goggles with HDMI input (e.g. HDZero Goggle 2 / BoxPro, Skyzone SKY04X Pro, Walksnail Goggles X)", "requirement": "OpenIPC ground receiver with HDMI out: EMAX Wyvern Link Goggle VRX (DC 8-24 V; EMAX advertises attachment to Fat Shark-style goggles) or RunCam WiFiLink-RX (9-30 V, HDMI 1080p60/720p60)"}
+      ],
+      "caveats": [
+        "No goggles receive OpenIPC natively; the Wyvern ground VRX 'Works only with OpenIPC VTX and display, not standalone' and must be paired with an OpenIPC VTX.",
+        "EMAX Wyvern Link hardware is sold as an Alpha release.",
+        "RunCam WiFiLink 2 quotes ~40 ms latency; RunCam WiFiLink-RX also supports Ruby FPV.",
+        "Configuration is done over Ethernet/USB-C adapters (EMAX) or a network card (RunCam) - more setup than DJI/Walksnail/HDZero."
+      ],
+      "sources": [
+        "https://www.racedayquads.com/products/emax-wyvern-link-openipc-goggle-vrx",
+        "https://www.racedayquads.com/products/runcam-wifilink-rx-vrx-w-openipc",
+        "https://www.racedayquads.com/products/runcam-wifilink-2-w-openipc",
+        "https://www.racedayquads.com/products/emax-wyvern-link-openipc-200mw-vtx",
+        "https://www.flyfive33.com/products/hdzero-goggle-2",
+        "https://www.caddxfpv.com/products/walksnail-avatar-hd-goggles-x-only"
+      ]
+    }
+  },
+
+  "air_units": [
+    {
+      "name": "DJI O4 Air Unit (O4 Lite)",
+      "system": "dji-o4",
+      "input_v": [3.7, 13.2],
+      "power_draw_w": 5,
+      "camera_width_mm": 14,
+      "weight_g": 8.95,
+      "dji_rc": true,
+      "records": "4K60 (1080p up to 120fps), 100 Mbps, 23 GB internal, no microSD",
+      "mount": ["25.5x25.5"],
+      "notes": "8.2 g with camera + 0.75 g antenna (DJI: 9.2 g with lens mount). Camera module 13.44 x 12.36 x 16.50 mm - sits in 14 mm nano slots with O4 adapter plates/cases. Transmission module 30 x 30 x 6 mm; RDQ lists a 25.5 x 25.5 mm mounting pattern (DJI's FAQ loosely says '30 x 30 mm' hole distance). Practical dropout ~3.8 V. DJI publishes no power figure.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.dji.com/o4-air-unit/specs", "https://www.dji.com/o4-air-unit/faq", "https://www.racedayquads.com/products/dji-o4-air-unit", "https://www.racedayquads.com/products/axisflying-component-set-case-for-dji-o4-air-unit-14mm", "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"]
+    },
+    {
+      "name": "Flywoo DJI O4 Wide Air Unit Set (159 deg lens)",
+      "system": "dji-o4",
+      "input_v": [3.7, 13.2],
+      "power_draw_w": 5,
+      "camera_width_mm": 14,
+      "weight_g": 13,
+      "dji_rc": true,
+      "records": "4K60, max 60 Mbps live bitrate, 23 GB internal, no microSD",
+      "mount": ["25.5x25.5"],
+      "notes": "DJI O4 internals with a Flywoo 159 deg lens; 13 g including camera and 50 mm coax; 80 mm copper-tube antenna; ships with 18 mm and 20 mm camera shells so the 14 mm camera fits micro/O3-style mounts. Input range not on the listing (taken from the DJI O4).",
+      "est": ["power_draw_w", "input_v"],
+      "sources": ["https://www.racedayquads.com/products/flywoo-dji-o4-wide-air-unit-set", "https://www.newbeedrone.com/products/flywoo-dji-o4-wide-air-unit-159-fov"]
+    },
+    {
+      "name": "DJI O4 Air Unit Pro",
+      "system": "dji-o4-pro",
+      "input_v": [7.4, 26.4],
+      "power_draw_w": 9,
+      "camera_width_mm": 20,
+      "weight_g": 36.2,
+      "dji_rc": true,
+      "records": "4K120 (16:9; 4K 4:3 up to 60fps; 2.7K/1080p modes), 130 Mbps, D-Log M, 4 GB internal + microSD up to 512 GB",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "32 g with camera (15.6 g without) + 2 x 2.1 g antennas. Camera 25.55 x 20 x 23.30 mm. Transmission module 33.5 x 33.5 x 13 mm. DJI publishes no power figure.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.dji.com/o4-air-unit/specs", "https://www.racedayquads.com/products/dji-o4-air-unit-pro"]
+    },
+    {
+      "name": "DJI O3 Air Unit",
+      "system": "dji-o3",
+      "input_v": [7.4, 26.4],
+      "power_draw_w": 9,
+      "power_draw_peak_w": 18,
+      "camera_width_mm": 20,
+      "weight_g": 42.4,
+      "dji_rc": true,
+      "records": "4K 50/60fps, 2.7K/1080p up to 100fps, 20 GB internal",
+      "mount": ["25.5x25.5"],
+      "notes": "36.4 g with camera (camera module 8.3 g incl. coax) + two stock antennas at ~3 g each. Camera fits 20 mm mounts (frames list '20mm (DJI and O3 camera)'). Air-unit side of NewBeeDrone's O3 adapter is 25.5 x 25.5. GetFPV says it 'can draw close to 2A' - size the 9-10 V BEC for 2 A (peak ~18 W); typical draw is lower.",
+      "est": ["power_draw_w", "power_draw_peak_w"],
+      "sources": ["https://www.racedayquads.com/products/dji-air-unit-03", "https://www.racedayquads.com/products/iflight-bnf-defender-25-hd-4s-2-5-cinewhoop-w-dji-o3-air-unit-and-dji-camera-choose-receiver", "https://www.racedayquads.com/products/dji-o3-air-unit-camera-module", "https://www.racedayquads.com/products/dji-03-air-unit-antenna", "https://www.racedayquads.com/products/newbeedrone-dji-o3-air-unit-20x20-adapter-mount", "https://www.racedayquads.com/products/iflight-aos-7-evo-7-v1-2-frame-kit", "https://www.getfpv.com/dji-o3-air-unit.html"]
+    },
+    {
+      "name": "Caddx Vista (DJI FPV V1)",
+      "system": "dji-v1",
+      "input_v": [7.4, 26.4],
+      "power_draw_w": 6,
+      "camera_width_mm": 19,
+      "weight_g": 26.5,
+      "dji_rc": true,
+      "records": null,
+      "mount": ["20x20"],
+      "notes": "Figures are for the Caddx Nebula Pro Vista Kit (the previous 29 g figure for the DJI-camera Vista came only from GetFPV, which could not be re-fetched): 25 g with camera + 1.5 g antenna; Vista board 30 x 29 x 13 mm; Nebula Pro camera 19 x 19 x 20 mm. 720p120, 25/200/500/700 mW, no onboard recording (records in goggles). Discontinued. 20 x 20 pattern inferred from frames/VTXs sold as Vista-compatible (e.g. HDZero Freestyle V2, 20x20 M2).",
+      "est": ["power_draw_w", "mount"],
+      "sources": ["https://www.racedayquads.com/products/caddx-nebula-pro-vista-kit-w-12cm-cable-black", "https://www.racedayquads.com/products/hdzero-freestyle-v2-20x20-25-1000mw-digital-hd-vtx-u-fl"]
+    },
+    {
+      "name": "Walksnail Avatar HD Pro Kit (dual antenna)",
+      "system": "walksnail",
+      "input_v": [6, 25.2],
+      "power_draw_w": 7,
+      "camera_width_mm": 19,
+      "weight_g": 28.9,
+      "dji_rc": false,
+      "records": "1080p / 720p, 32 GB internal, Gyroflow (live 1080p60 / 720p120)",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "VTX 15.4 g + Pro camera 9.5 g + 2 x 2 g antennas = 28.9 g (marketing copy says 'Weighing only 30g'). Camera 19 x 19 x 24 mm (1/1.8in Starvis II). Walksnail recommends a standalone BEC above 2S.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-avatar-hd-pro-kit-dual-antenna", "https://www.racedayquads.com/products/pre-order-walksnail-avatar-hd-pro-kit-20x20-25x25-vtx-kit-w-micro-camera-pro-dual-antennas-version"]
+    },
+    {
+      "name": "Walksnail Avatar HD Kit V2 (dual antenna)",
+      "system": "walksnail",
+      "input_v": [6, 25.2],
+      "power_draw_w": 7,
+      "camera_width_mm": 19,
+      "weight_g": 26.6,
+      "dji_rc": false,
+      "records": "1080p / 720p, 32 GB internal",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "VTX 15.4 g + camera 7.2 g + 2 x 2 g antennas (2x IPEX) = 26.6 g. Camera 19 x 19 x 22 mm, 1/3.2in 4 MP 4:3 sensor.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-avatar-hd-kit-v2-dual-antenna"]
+    },
+    {
+      "name": "Walksnail Avatar Moonlight Kit (4K)",
+      "system": "walksnail",
+      "input_v": [7.4, 25.2],
+      "power_draw_w": 16.8,
+      "camera_width_mm": 19,
+      "weight_g": 42.5,
+      "dji_rc": false,
+      "records": "4K30/60, 2.7K30/60, 1080p60/100, 720p60 to microSD (U3, up to 256 GB), 150 Mbps",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "Gross 38.5 g without antennas + 2 x 2 g antennas = 42.5 g (camera 8.9 g without wire, recording board 10 g). Camera 19.6 x 19 x 24 mm. VTX 15.3 x 34.5 x 34.5 mm. Listed draw 12 V x 1.4 A (8 V x 2.2 A).",
+      "est": [],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-moonlight-kit-only", "https://www.racedayquads.com/products/moonlight"]
+    },
+    {
+      "name": "Walksnail Avatar GT Kit (2 W)",
+      "system": "walksnail",
+      "input_v": [11.1, 25.2],
+      "power_draw_w": 15,
+      "camera_width_mm": 19,
+      "weight_g": 51.1,
+      "dji_rc": false,
+      "records": "1080p / 720p to microSD (up to 256 GB, not included)",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "VTX 41.6 g incl. antenna + Pro camera 9.5 g. Up to 2 W output; heatsink-cooled (fan sold separately). No published power figure.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-avatar-gt-kit-only"]
+    },
+    {
+      "name": "Walksnail Avatar GT2 Kit (2 W)",
+      "system": "walksnail",
+      "input_v": [11.1, 25.2],
+      "power_draw_w": 15,
+      "camera_width_mm": 19,
+      "weight_g": 52,
+      "dji_rc": false,
+      "records": "1080p / 720p to microSD (up to 256 GB)",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "52 g WITHOUT antenna (antenna weight not published on the listing); VTX 34 x 36 x 23.5 mm with cooling fan; camera 19 x 19 x 24 mm; JST1.0 6-pin power cable; head-tracking support with compatible goggles/gimbals.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.racedayquads.com/products/walksnail-avatar-gt2-kit"]
+    },
+    {
+      "name": "Walksnail Avatar HD Nano Kit V3 (Mini VTX V3 + Nano Camera V3)",
+      "system": "walksnail",
+      "input_v": [3.1, 13],
+      "power_draw_w": 5,
+      "camera_width_mm": 14,
+      "weight_g": 18.5,
+      "dji_rc": false,
+      "records": "1080p / 720p, 32 GB internal",
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "Kit 18.5 g: metal-cased Mini VTX V3 13.4 g (31.5 x 31.5 x 9.4 mm) + Nano Camera V3 3 g (14 x 14 x 16.8 mm) + antenna. 500 mW. Mounting 25.5 x 25.5 (M2 holes) and 20 x 20 (M3 holes). Walksnail recommends a standalone BEC above 2S.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.racedayquads.com/products/walksnail-avatar-hd-nano-v3-vtx-kit-w-nano-camera"]
+    },
+    {
+      "name": "Walksnail Avatar HD Mini 1S Kit (V3)",
+      "system": "walksnail",
+      "input_v": [3.1, 13],
+      "power_draw_w": 4,
+      "camera_width_mm": 14,
+      "weight_g": 12.3,
+      "dji_rc": false,
+      "records": "1080p / 720p, 8 GB internal (Caddx page; some store variants list 32 GB)",
+      "mount": ["25.5x25.5"],
+      "notes": "VTX 6.8 g + nano camera 3.5 g (14 x 14 x 17 mm) + 2 g antenna. 500 mW. V2 VTX was 3.1-5 V only. Hard dropout at 3.1 V.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-avatar-hd-mini-1s-kit", "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"]
+    },
+    {
+      "name": "Walksnail Avatar HD Mini 1S Lite Kit",
+      "system": "walksnail",
+      "input_v": [3.1, 13],
+      "power_draw_w": 3.5,
+      "camera_width_mm": 14,
+      "weight_g": 7.8,
+      "dji_rc": false,
+      "records": "1080p / 720p, 8 GB internal",
+      "mount": ["25.5x25.5"],
+      "notes": "Kit 7.8 g (camera 1.8 g, 14 x 14 x 16 mm; antenna 0.5 g). Input 3.1-13 V on V3 hardware, 3.1-5 V on V2 - check the board version before powering above 5 V. Page lists the VTX as 5.1 g in prose and 6.8 g in the spec table.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.caddxfpv.com/products/walksnail-avatar-hd-mini-1s-lite-kit"]
+    },
+    {
+      "name": "HDZero Race V3 VTX",
+      "system": "hdzero",
+      "input_v": [4, 12],
+      "power_draw_w": 5.8,
+      "camera_width_mm": null,
+      "weight_g": 5.5,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["20x20"],
+      "notes": "25/200 mW, 540p90/720p60/1080p30, reverse-polarity protection, 1.6 mm PCB, 32 x 28 x 5 mm. Mounting 20 x 20 with M4 holes and rubber grommets. MIPI camera sold separately (see hdzero_cameras). Power draw not published; Whoop Lite (same generation) is 5.8 W at 200 mW.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.hd-zero.com/product-page/hdzero-race-v3-vtx", "https://www.racedayquads.com/products/hdzero-race-v3-1080p-20x20-25-200mw-digital-hd-vtx"]
+    },
+    {
+      "name": "HDZero Freestyle V2 VTX",
+      "system": "hdzero",
+      "input_v": [7, 25],
+      "power_draw_w": 15,
+      "camera_width_mm": null,
+      "weight_g": 22.3,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["20x20"],
+      "notes": "Published draw 6-15 W (15 W used as the max). 25/200 mW, up to 1 W on R1 when unlocked with a licence. 720p60/1080p30/540p60/540p90. 29 x 30 x 14 mm; fits most Vista/RunCam Link frames. Kit adds Nano 90 camera (5.2 g without cable, 14 mm wide, ships with a 19 x 19 mount).",
+      "est": [],
+      "sources": ["https://www.hd-zero.com/product-page/freestyle-v2-vtx", "https://www.racedayquads.com/products/hdzero-freestyle-v2-20x20-25-1000mw-digital-hd-vtx-kit-u-fl"]
+    },
+    {
+      "name": "HDZero Whoop V2 VTX",
+      "system": "hdzero",
+      "input_v": [3, 12.6],
+      "power_draw_w": 6,
+      "camera_width_mm": null,
+      "weight_g": 5.4,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["25.5x25.5"],
+      "notes": "Published draw 5-6 W; 25/200 mW; 1S-3S; 5.4 g (5.1 g without wires); no reverse-polarity protection; MIPI cameras only.",
+      "est": [],
+      "sources": ["https://www.racedayquads.com/products/hdzero-whoop-v2-vtx", "https://www.newbeedrone.com/products/hdzero-whoop-v2-vtx"]
+    },
+    {
+      "name": "HDZero Whoop Lite VTX",
+      "system": "hdzero",
+      "input_v": [3.7, 12.6],
+      "power_draw_w": 5.8,
+      "camera_width_mm": null,
+      "weight_g": 4.9,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["25.5x25.5"],
+      "notes": "4.9 g with wires (4.6 g without; NewBeeDrone comparison table); RDQ lists 4.5 g without shielding. 5 W at 25 mW, 5.8 W at 200 mW (RDQ; NewBeeDrone lists 7 W). 1S-3S; MIPI cameras.",
+      "est": ["input_v"],
+      "sources": ["https://www.racedayquads.com/products/hdzero-whoop-lite-bundle-kit", "https://www.racedayquads.com/products/hdzero-whoop-lite-25x25-200mw-digital-hd-vtx-u-fl", "https://www.newbeedrone.com/products/hdzero-whoop-v2-vtx"]
+    },
+    {
+      "name": "HDZero ECO VTX + ECO camera",
+      "system": "hdzero",
+      "input_v": [3.7, 12.6],
+      "power_draw_w": 5,
+      "camera_width_mm": 14,
+      "weight_g": 6.3,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["25.5x25.5"],
+      "notes": "NewBeeDrone ECO Bundle: VTX ~4.5 g + camera ~1.6 g with wire + 0.2 g dipole = ~6.3 g (fpvknowitall says 'about 7-8 grams'). 1S-3S input, 25/200 mW, 25 x 25 M2 soft mount. HD-composite single-wire camera link: takes the ECO or Lux camera, not MIPI cameras.",
+      "est": ["power_draw_w", "input_v"],
+      "sources": ["https://www.newbeedrone.com/products/hdzero-eco-bundle", "https://www.racedayquads.com/products/hdzero-eco-camera", "https://www.racedayquads.com/products/hdzero-lux-camera", "https://www.fpvknowitall.com/fpv-shopping-list-hd-fpv-drones-and-parts/"]
+    },
+    {
+      "name": "EMAX Wyvern Link OpenIPC 200 mW VTX",
+      "system": "openipc",
+      "input_v": [7.4, 25.2],
+      "power_draw_w": 6,
+      "camera_width_mm": null,
+      "weight_g": 13.76,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["25.5x25.5"],
+      "notes": "IMX415, 1080p90 / 720p120, 2-6S. Includes camera, USB-C/Ethernet adapter and two dipoles. Camera size not published: the identically weighted Wyvern Link (Alpha) 100 mW VTX lists a 14 mm lens module, the 800 mW versions 19 mm - check before choosing a camera mount.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.racedayquads.com/products/emax-wyvern-link-openipc-200mw-vtx", "https://www.racedayquads.com/products/emax-wyvern-link-alpha-openipc-100mw-vtx"]
+    },
+    {
+      "name": "EMAX Wyvern Link Alpha V2 800 mW VTX (aluminum case)",
+      "system": "openipc",
+      "input_v": [7.4, 25.2],
+      "power_draw_w": 12,
+      "camera_width_mm": 19,
+      "weight_g": 48.2,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["20x20", "25.5x25.5"],
+      "notes": "48.2 g incl. 19 x 19 mm IMX415 camera (excl. antenna cable); 2-6S; active fan cooling; 1080p90 / 720p120.",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.racedayquads.com/products/emax-wyvern-link-alpha-v2-800mw-vtx-w-openipc-aluminum-case"]
+    },
+    {
+      "name": "RunCam WiFiLink 2 (OpenIPC)",
+      "system": "openipc",
+      "input_v": [9, 22],
+      "power_draw_w": 12,
+      "camera_width_mm": 19,
+      "weight_g": null,
+      "dji_rc": false,
+      "records": null,
+      "mount": ["25.5x25.5"],
+      "notes": "IMX415, 1080p60/1080p90/720p120, ~40 ms latency, 19 x 19 mm M12 lens module on 130 mm MIPI cable, PCB 30.6 x 33 mm. Weight not on the listing (the earlier RunCam WiFiLink / WiFiLink-G list 30 g).",
+      "est": ["power_draw_w"],
+      "sources": ["https://www.racedayquads.com/products/runcam-wifilink-2-w-openipc", "https://www.racedayquads.com/products/runcam-wifilink-w-openipc"]
+    }
+  ],
+
+  "hdzero_cameras": [
+    {"name": "RunCam HDZero Nano V3", "width_mm": 14, "weight_g": 2.2, "power_w": 0.5, "input_v": [3.3, 3.3], "resolution": "720p60 4:3", "interface": "MIPI", "notes": "Listed L14 x W16 x H14 mm; MIPI cable not included", "sources": ["https://www.newbeedrone.com/products/hdzero-nano-v3-camera", "https://www.flyfive33.com/products/hdzero-nano-v3-camera"]},
+    {"name": "RunCam HDZero Lux", "width_mm": 14, "weight_g": 2.3, "power_w": 0.5, "input_v": [3.3, 5], "resolution": "720p60 4:3 / 16:9", "interface": "HD composite (single wire)", "notes": "Listed L14 x W16 x H14 mm; for the ECO VTX and HDZero AIO boards (aspect ratio set manually on both), not MIPI VTXs", "sources": ["https://www.racedayquads.com/products/hdzero-lux-camera", "https://www.newbeedrone.com/products/hdzero-lux-camera"]},
+    {"name": "RunCam HDZero Eco", "width_mm": 14, "weight_g": 1.8, "power_w": 0.5, "input_v": [3.3, 5], "resolution": "720p60 4:3", "interface": "HD composite (single wire)", "notes": "14 x 14 x 13 mm, 1.8 g with cable (ECO Bundle text says 1.6 g); for the ECO VTX and HDZero AIO boards", "sources": ["https://www.newbeedrone.com/products/hdzero-eco-camera", "https://www.racedayquads.com/products/hdzero-eco-camera"]},
+    {"name": "RunCam HDZero Nano 90 (V1/V2)", "width_mm": 14, "weight_g": 5.2, "power_w": null, "input_v": null, "resolution": "540p90 / 540p60 / 720p60", "interface": "MIPI", "notes": "L18 x W14 x H18 mm, 5.2 g without cable; the Freestyle V2 kit ships it with a 19 x 19 mount; V2 changed the lens (FOV D162)", "sources": ["https://www.racedayquads.com/products/hdzero-freestyle-v2-20x20-25-1000mw-digital-hd-vtx-kit-u-fl", "https://www.racedayquads.com/products/runcam-hdzero-nano-90-v2-fpv-camera"]},
+    {"name": "HDZero Micro V3", "width_mm": 19, "weight_g": 7.5, "power_w": 0.5, "input_v": null, "resolution": "1080p30 / 720p60 (native 16:9)", "interface": "MIPI", "notes": "19 x 19 x 24 mm; MIPI cable not included", "sources": ["https://www.newbeedrone.com/products/hdzero-micro-v3-camera", "https://www.flyfive33.com/products/hdzero-micro-v3-camera"]}
+  ],
+
+  "rc_protocols": {
+    "elrs-2.4": {
+      "label": "ExpressLRS 2.4 GHz",
+      "interoperates_with": ["elrs-2.4", "elrs-dual"],
+      "notes": "ELRS FAQ: 'Any Receiver and TX Module from the same Band ... will work together', across manufacturers, if both run the same major ELRS version (binding page: 'The first number in the Version string should match') and the same binding phrase/regulatory domain. A Gemini Xrossband/dual-band TX (e.g. RadioMaster Nomad Dual) can also run single-band 2.4 GHz modes, and LR1121 multi-frequency receivers (XR1: 'ISM 2.4 or FCC 915') can run 2.4 GHz. 2.4 GHz hardware does not talk to 900 MHz-only hardware. Single-band Gemini needs a true-diversity receiver.",
+      "sources": ["https://www.expresslrs.org/faq/", "https://www.expresslrs.org/quick-start/binding/", "https://www.expresslrs.org/software/gemini/", "https://www.racedayquads.com/products/radiomaster-nomad-dual-1w-gemini-xrossband-expresslrs-module", "https://www.racedayquads.com/products/radiomaster-xr1-nano-multi-frequency-elrs-2-4ghz-sub-g-900mhz-dual-band-receiver"]
+    },
+    "elrs-900": {
+      "label": "ExpressLRS 900 MHz (868/915)",
+      "interoperates_with": ["elrs-900", "elrs-dual"],
+      "notes": "Same rules as 2.4: same band + same major version + same configuration (FAQ cites Regulatory Domain, so FCC 915 and EU 868 hardware must be set alike). Dual-band TX modules can run single-band 868/900 MHz modes.",
+      "sources": ["https://www.expresslrs.org/faq/", "https://www.expresslrs.org/quick-start/binding/", "https://www.racedayquads.com/products/radiomaster-nomad-dual-1w-gemini-xrossband-expresslrs-module"]
+    },
+    "elrs-dual": {
+      "label": "ExpressLRS Gemini Xrossband (2.4 GHz + 900 MHz)",
+      "interoperates_with": ["elrs-dual", "elrs-2.4", "elrs-900"],
+      "notes": "GemX is available to devices with 2 LR1121 RF chipsets; X-modes (X100 Full Res, X150) run one RF circuit on sub-GHz and the other on 2.4 GHz and lock antenna mode to Gemini. 'A GemX-capable receiver will be required for this mode, and any single-band receiver will not get a sync' - the TX must be switched to a single-band packet rate. In ELRS 4.0 the TX module changes mode automatically to match the receiver in sync. Major versions must match.",
+      "sources": ["https://www.expresslrs.org/software/gemini/", "https://www.racedayquads.com/products/radiomaster-xr4-gemini-xrossband-elrs-2-4ghz-900mhz-dual-band-diversity-receiver", "https://www.racedayquads.com/products/radiomaster-nomad-dual-1w-gemini-xrossband-expresslrs-module"]
+    },
+    "crossfire": {
+      "label": "TBS Crossfire (868/915 MHz)",
+      "interoperates_with": ["crossfire"],
+      "notes": "Proprietary TBS link; receivers output CRSF to the FC. Crossfire TX modules bind only Crossfire receivers - Tracer is a different 2.4 GHz product line. CRSF on the FC side is shared with ELRS/Tracer (same serial protocol), but the RF links do not interoperate.",
+      "sources": ["https://www.racedayquads.com/products/tbs-crossfire-nano-tx", "https://www.racedayquads.com/products/tbs-tracer-nano-rx"]
+    },
+    "tracer": {
+      "label": "TBS Tracer (2.4 GHz)",
+      "interoperates_with": ["tracer"],
+      "notes": "'Next generation of crossfire with 2.4GHz technology' - same CRSF/SBUS outputs to the FC, but a different band from Crossfire, so Tracer TX binds only Tracer receivers.",
+      "sources": ["https://www.racedayquads.com/products/tbs-tracer-nano-rx", "https://www.racedayquads.com/products/tbs-tracer-micro-tx"]
+    },
+    "ghost": {
+      "label": "ImmersionRC Ghost (2.4 GHz)",
+      "interoperates_with": ["ghost"],
+      "notes": "Ghost receivers bind to Ghost (JR-bay) transmitters; FC output SBUS, SBUS-Fast, SRXL-2 or GHST.",
+      "sources": ["https://www.racedayquads.com/products/immersionrc-ghost-atto-2-4ghz-micro-receiver-w-qt-antenna"]
+    },
+    "frsky-access": {
+      "label": "FrSky ACCESS",
+      "interoperates_with": ["frsky-access", "frsky-accst"],
+      "notes": "FrSky: 'users can bind the ACCST D16 receivers with a new ACCESS transmitter'. D8 (and LR12) receivers need an external XJT / XJT Lite module. ACCESS is not supported by the 4-in-1 multiprotocol module.",
+      "sources": ["https://www.frsky-rc.com/frsky-advanced-communication-control-elevated-spread-spectrum-access-protocol-release/", "https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md"]
+    },
+    "frsky-accst": {
+      "label": "FrSky ACCST D16",
+      "interoperates_with": ["frsky-accst", "frsky-access"],
+      "notes": "D16 exists as v1 (FrSkyX) and v2.1 (FrSkyX2) firmware families, each in FCC and EU-LBT flavours - TX and RX firmware family/flavour must match. A 4-in-1 multiprotocol module (CC2500) speaks both D16 v1 and D16 v2.1.",
+      "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md", "https://www.frsky-rc.com/frsky-advanced-communication-control-elevated-spread-spectrum-access-protocol-release/"]
+    },
+    "frsky-d8": {
+      "label": "FrSky D8",
+      "interoperates_with": ["frsky-d8"],
+      "notes": "Older 8-channel FrSky protocol (D4R/D8R era). Supported by the 4-in-1 multiprotocol module (CC2500, protocol FrskyD). ACCESS radios need an external XJT/XJT Lite module for D8.",
+      "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md", "https://www.frsky-rc.com/frsky-advanced-communication-control-elevated-spread-spectrum-access-protocol-release/"]
+    },
+    "flysky-afhds2a": {
+      "label": "FlySky AFHDS 2A",
+      "interoperates_with": ["flysky-afhds2a"],
+      "notes": "Supported by the 4-in-1 multiprotocol module (A7105 chip, protocol AFHDS2A).",
+      "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md", "https://www.racedayquads.com/products/radiomaster-2-4ghz-4in1-transmitter-module"]
+    },
+    "flysky-afhds3": {
+      "label": "FlySky AFHDS 3",
+      "interoperates_with": ["flysky-afhds3"],
+      "notes": "Not in the multiprotocol module's protocol list, so a 4-in-1 module cannot bind AFHDS 3 receivers. Treat AFHDS 3 and AFHDS 2A as separate links unless the radio lists both.",
+      "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md"]
+    },
+    "spektrum-dsmx": {
+      "label": "Spektrum DSMX",
+      "interoperates_with": ["spektrum-dsmx"],
+      "notes": "Supported by the 4-in-1 multiprotocol module (CYRF6936 chip, protocol DSM covering DSM2/DSMX).",
+      "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md", "https://www.racedayquads.com/products/radiomaster-2-4ghz-4in1-transmitter-module"]
+    },
+    "dji-rc": {
+      "label": "DJI FPV Remote Controller (via the air unit)",
+      "interoperates_with": ["dji-rc"],
+      "notes": "The DJI air unit acts as the receiver and outputs SBUS - the FC's receiver protocol must be SBUS. FPV Remote Controller 3 with Goggles 3/N3 + O4; FPV Remote Controller 2 with Goggles 2/Integra + O3/O4 and with FPV Goggles V2 + O3. (O3 on Goggles 3 works after firmware v01.00.0300; DJI lists Goggles 3 with RC 3, but the O3-on-G3 RC pairing is not stated on the pages checked.) V1 air units (Vista etc.) have a built-in receiver for the original DJI FPV Remote Controller via DJI FPV Goggles. Walksnail, HDZero and OpenIPC have no equivalent - they need a separate receiver.",
+      "sources": ["https://www.dji.com/o4-air-unit/specs", "https://www.dji.com/o4-air-unit/faq", "https://www.racedayquads.com/products/dji-o3-air-unit-camera-module", "https://www.racedayquads.com/products/caddx-nebula-pro-vista-kit-w-12cm-cable-black", "https://www.dji.com/goggles-n3/faq"]
+    }
+  },
+
+  "rc_multiprotocol_module": {
+    "label": "4-in-1 multiprotocol module (MPM / RadioMaster 4IN1 / Jumper JP4IN1)",
+    "rf_chips": ["CC2500", "A7105", "CYRF6936", "NRF24L01"],
+    "covers": ["frsky-d8", "frsky-accst", "flysky-afhds2a", "spektrum-dsmx"],
+    "does_not_cover": ["frsky-access", "flysky-afhds3", "elrs-2.4", "elrs-900", "elrs-dual", "crossfire", "tracer", "ghost", "dji-rc"],
+    "notes": "70+ protocols in total (DSMX, FlySky, SFHSS, Hitec, HoTT, Radiolink, FrSky ...). FrSky D16 v1 = FrSkyX, D16 v2.1 = FrSkyX2. ACCESS, AFHDS 3, Crossfire, ELRS and Ghost were not in the protocol list read.",
+    "sources": ["https://raw.githubusercontent.com/pascallanger/DIY-Multiprotocol-TX-Module/master/Protocols_Details.md", "https://www.racedayquads.com/products/radiomaster-2-4ghz-4in1-transmitter-module"]
+  },
+
+  "classes": {
+    "w65": {
+      "misc_weight_g": 2,
+      "misc_weight_range_g": [1.5, 3],
+      "typical_auw_g": [25, 50],
+      "typical_tw": [2.5, 6.5],
+      "typical_flight_min": [3, 5],
+      "typical_battery": "1S 250-480 mAh LiHV, BT2.0 / PH2.0 / A30 / GNB27",
+      "notes": "Air65 II: 17.8 g dry + LAVA II 320 mAh 8.2 g = ~26 g, 5:00 flight, claimed 6.3:1 T/W. Meteor65 Pro II (O4 version listing): 36.2 g + 480 mAh 12.6 g = ~49 g, 4:05. fpvknowitall targets <20 g dry for 65 mm freestyle and notes ~4 g extra for HDZero (Mobula6 HDZero vs analog). Misc = BT2.0 pigtail, solder/wire, canopy screws, RX antenna (0.25-1 g).",
+      "est": ["misc_weight_g"],
+      "sources": ["https://www.racedayquads.com/products/betafpv-air65-ii-brushless-whoop-freestyle", "https://www.racedayquads.com/products/betafpv-meteor65-pro-ii-drone-hd-w-dji-o4-wide-1s-elrs-2-4ghz", "https://www.fpvknowitall.com/fpv-shopping-list-tiny-whoop/"]
+    },
+    "w75": {
+      "misc_weight_g": 3,
+      "misc_weight_range_g": [2, 5],
+      "typical_auw_g": [33, 75],
+      "typical_tw": [2.5, 7],
+      "typical_flight_min": [3, 7.5],
+      "typical_battery": "1S 450-680 mAh LiHV (BT2.0) or 2S 450-850 mAh (XT30)",
+      "notes": "Air75 II: 21.3 g + 480 mAh 12.6 g = ~34 g, 7:30. Meteor75 Pro II: 41.5 g + 580/680 mAh = ~56 g, 5:00-6:00. AcroBee75 O4: 44 g dry on 2S 450-850 mAh XT30, ~3:00 on 450 mAh 2S. Pavo Femto (2S, O4): 54.77 g, T/W 'exceeds 6.75:1'.",
+      "est": ["misc_weight_g"],
+      "sources": ["https://www.racedayquads.com/products/betafpv-air75-ii-brushless-whoop-freestyle", "https://www.racedayquads.com/products/betafpv-meteor75-pro-ii-drone-hd-w-dji-o4-wide-1s-elrs-2-4ghz", "https://www.racedayquads.com/products/newbeedrone-acrobee75-pusher-drone-hd-w-dji-o4-elrs-2-4ghz", "https://www.racedayquads.com/products/betafpv-pavo-femto-75mm-drone-hd-w-dji-o4", "https://www.fpvknowitall.com/fpv-shopping-list-tiny-whoop/"]
+    },
+    "p2": {
+      "misc_weight_g": 5,
+      "misc_weight_range_g": [4, 7],
+      "typical_auw_g": [75, 180],
+      "typical_tw": [3.5, 8],
+      "typical_flight_min": [5, 11],
+      "typical_battery": "2S 450-1000 mAh (XT30); 3S-4S 450-850 mAh on 1303/1203 builds",
+      "notes": "Flytimes 85 O4: 58.9 g, 5:30 (550) / 7:30 (750) / 9:00 (1000 mAh) at 24-27% takeoff throttle. Flybee 20 O4: 47.6 g. Pavo Pico II O4: 53.7 g, up to 6:30. Aquila20: 127 g takeoff with 2S 1100 mAh, ~10 min. Firefly 20 Pro O4: 99 g on 4S 450-750, 5:00-6:30. DINO 20: 94 g on 3S 550-850, 5-11 min. M1103 motors make ~225-238 g thrust each.",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/flywoo-flytimes-85-drone-hd-w-dji-o4-2s", "https://www.racedayquads.com/products/flywoo-flybee-20-2-drone-hd-w-dji-o4", "https://www.racedayquads.com/products/betafpv-pavo-pico-ii-drone-hd-w-dji-o4-2s-elrs-2-4ghz", "https://www.racedayquads.com/products/betafpv-aquila20-quadcopter-drone-hd-2s-elrs-2-4ghz", "https://www.racedayquads.com/products/flywoo-firefly-20-pro-bnf-drone-w-dji-o4-wide", "https://www.racedayquads.com/products/deepspace-dino-20-drone-hd-w-dji-o4-wide-3s-elrs-2-4ghz", "https://www.ligpower.com/product/m1103-fpv-motor.html"]
+    },
+    "p25": {
+      "misc_weight_g": 8,
+      "misc_weight_range_g": [6, 10],
+      "typical_auw_g": [130, 250],
+      "typical_tw": [3, 6],
+      "typical_flight_min": [5, 12],
+      "typical_battery": "3S-4S 450-1000 mAh LiHV (XT30)",
+      "notes": "Firefly 25 Mini O4: 99.5 g dry on 3S 550/750/1000 mAh -> 8:00 / 9:30 / 12:30 at 25-27% takeoff throttle. Pavo20 Pro II (2.2in, O4 Pro): under 150 g, up to 6:30, T/W 'greater than 5:1'. fpvknowitall: 2.5in props are less efficient/thrusty than 3in. F1204 5000KV + 2.5in prop: ~157 g thrust per motor on 3S.",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/flywoo-firefly-25-mini-bnf-drone-w-dji-o4-wide", "https://www.racedayquads.com/products/betafpv-pavo20-pro-2-2-cinewhoop-w-dji-o4-pro-elrs-2-4ghz", "https://www.fpvknowitall.com/fpv-shopping-list-toothpick-fpv-drones-and-parts/", "https://www.ligpower.com/product/f1204-fpv-motor.html"]
+    },
+    "p3": {
+      "misc_weight_g": 11,
+      "misc_weight_range_g": [8, 14],
+      "typical_auw_g": [110, 300],
+      "typical_tw": [4, 7],
+      "typical_flight_min": [5, 8],
+      "typical_battery": "3S 380-500 mAh or 4S 650-850 mAh (XT30); 6S 550 mAh on some",
+      "notes": "Baby Ape Pro V3: 74.1 g, 5-7 min on 3S 380 mAh. Cinelog30 V3 (O4 Pro): 187 g on 4S 660-720 mAh, 8:10 cruising. AvantQuads Avio 3: ~100 g dry analog / 125 g DJI plus ~100 g battery; 3in freestyle often 230-250 g (fpvknowitall). F1404: 301-480 g thrust per motor depending on KV/voltage. LionBee 3in LR on a 1S 18650: 62.3 g net, ~15 min flight / ~20 min hover (outlier).",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/darwinfpv-baby-ape-pro-v3-3-quadcopter-w-caddx-ant", "https://www.racedayquads.com/products/geprc-cinelog30-v3-drone-w-dji-o4-pro-1", "https://www.fpvknowitall.com/fpv-shopping-list-sub-250g-drones-and-parts/", "https://www.ligpower.com/product/f1404-fpv-motor.html", "https://www.racedayquads.com/products/newbeedrone-lionbee-3-lr-diy-drone-developer-kit-elrs-2-4ghz"]
+    },
+    "p35": {
+      "misc_weight_g": 15,
+      "misc_weight_range_g": [11, 20],
+      "typical_auw_g": [200, 650],
+      "typical_tw": [3, 6],
+      "typical_flight_min": [6, 12],
+      "typical_battery": "Sub-250: 4S 650-850 mAh (XT30). Cinewhoop: 6S 1050-1500 mAh (XT60)",
+      "notes": "Sub-250 3.5in builds land ~225-250 g with 4S 850 (~100 g) (fpvknowitall; 1404 motors standard). Manta 3.6: 108 g dry, 'over 8-minute' flight. CineApe 35 O3: 309 g on 6S 1300-1500, 7 min with GoPro / 9.5 min without. Axisflying C35 V3 O4 Pro: 385 g on 6S 1050-2200. Rekon35 V2: 174 g, 2S with built-in charging, up to 15 min (long-range outlier).",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.fpvknowitall.com/fpv-shopping-list-sub-250g-drones-and-parts/", "https://www.racedayquads.com/products/axisflying-manta-3-6-bnf-drone-w-walksnail-avatar-pro-elrs-2-4ghz", "https://www.racedayquads.com/products/darwinfpv-cineape-35-hd-bnf-w-o3-6s-elrs-2-4ghz", "https://www.racedayquads.com/products/axisflying-c35-v3-drone-w-dji-o4-pro-gps-elrs-2-4ghz", "https://www.racedayquads.com/products/hglrc-rekon35-v2-fpv-drone-analog-2s", "https://www.fpvknowitall.com/fpv-shopping-list-cinewhoop-fpv-drones-and-parts/"]
+    },
+    "p4": {
+      "misc_weight_g": 15,
+      "misc_weight_range_g": [11, 20],
+      "typical_auw_g": [230, 450],
+      "typical_tw": [3.5, 6],
+      "typical_flight_min": [6, 28],
+      "typical_battery": "4S 750-900 mAh LiHV (sub-250) or 4S1P 18650 3000 mAh Li-ion (XT30/XT60)",
+      "notes": "Flywoo Explorer LR 4 V2: ~162 g dry; spec table says ~229 g with 4S 750 mAh (listing intro says ~246 g); 4S1P 18650 3000 mAh packs weigh ~208 g (Auline V45) -> ~370 g, and Flywoo claims 'up to 28 minutes of cruising' on them. Upper flight-time bound is that Li-ion cruising claim.",
+      "est": ["misc_weight_g", "typical_tw", "typical_flight_min"],
+      "sources": ["https://www.racedayquads.com/products/flywoo-explorer-lr-4-v2-drone-hd-w-o4-wide-4s", "https://www.racedayquads.com/products/auline-18650-v45-4s-3000mah-14-8v-45a-li-ion-battery-xt60"]
+    },
+    "p5": {
+      "misc_weight_g": 25,
+      "misc_weight_range_g": [18, 32],
+      "typical_auw_g": [550, 800],
+      "typical_tw": [7, 12],
+      "typical_flight_min": [3, 8],
+      "typical_battery": "6S 1100-1500 mAh LiPo (180-220 g), XT60",
+      "notes": "fpvknowitall: 5in freestyle is 'almost always' 6S, ~1100-1400 mAh / 180-220 g packs. Vapor X5 O4 Pro: 409 g + 6S 1300-1800. BOB46: 455 g, 697 g takeoff with 6S 1480. Max thrust per 2207: 1711 g (Axisflying 2207.5 1860KV) to 2136 g (T-Motor F50) -> static T/W ~9-13 at 650 g; in-flight lower due to sag. GetFPV: a 1300 mAh 4S racer lasts ~3 min. Misc breakdown: XT60 pigtail ~8 g (XT60H 3.5 g + 14AWG lead), strap 3-7.5 g, capacitor 2-5 g, TPU 5-10 g, antennas/mounts 1-3 g, wire/solder/zip ties ~3 g.",
+      "est": ["misc_weight_g"],
+      "sources": ["https://www.fpvknowitall.com/fpv-shopping-list-five-inch-freestyle/", "https://www.racedayquads.com/products/geprc-vapor-x5-5-drone-hd-w-dji-o4-pro", "https://www.racedayquads.com/products/iflight-bob46-drone-hd-w-dji-o4-pro-6s", "https://www.racedayquads.com/products/axisflying-x-supaflyfpv-x-syncfpv-2207-5-1860kv-motor", "https://www.racedayquads.com/products/t-motor-f50-2207-5-racing-motor-2150kv-2200kv", "https://www.getfpv.com/learn/new-to-fpv/all-about-multirotor-fpv-drone-battery/"]
+    },
+    "p6": {
+      "misc_weight_g": 28,
+      "misc_weight_range_g": [20, 35],
+      "typical_auw_g": [650, 900],
+      "typical_tw": [5, 9],
+      "typical_flight_min": [5, 12],
+      "typical_battery": "6S 1480-2000 mAh LiPo, XT60",
+      "notes": "Nazgul Evoque F6D V2 (O4 Pro, GPS): 485 g, ~710 g takeoff with 6S 1480, max hover ~8.5 min. Vapor-D6: 465 g on 6S 1500-2000 (listing claims 14-19 min). 6in 'should have slightly longer flight times' than 5in (fpvknowitall).",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/iflight-nazgul-evoque-f6d-v2-drone-hd-w-dji-o4-pro-6s", "https://www.racedayquads.com/products/geprc-vapor-d6-drone-hd-w-dji-o4-pro", "https://www.fpvknowitall.com/fpv-shopping-list-five-inch-freestyle/"]
+    },
+    "p7": {
+      "misc_weight_g": 35,
+      "misc_weight_range_g": [25, 45],
+      "typical_auw_g": [850, 1650],
+      "typical_tw": [4, 8],
+      "typical_flight_min": [8, 25],
+      "typical_battery": "6S 2600-4500 mAh LiPo or 6S 6000-8000 mAh Li-ion, XT60",
+      "notes": "Crocodile75 V3 (O3): 628.5 g on 6S LiPo 2600-4200 or Li-ion 6000, 12-30 min. iFlight CineLR 7 (O4 Pro): 770 g dry, ~1628 g takeoff with 6S 8000 mAh 21700; hover ~18 min on 6S 3300 / ~25 min on 6S 8000. T-Motor F100 2810: 2467-2565 g max thrust per motor on 6S with 7in props.",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/geprc-bnf-crocodile75-v3-hd-lr-6s-7-long-range-quad-w-dji-o3-air-unit-micro-cam-elrs-2-4ghz-gps", "https://www.racedayquads.com/products/iflight-cinelr-7-7-drone-hd-w-dji-o4-pro-6s", "https://www.racedayquads.com/products/t-motor-f100-2810-1350kv-motor", "https://www.ligpower.com/product/f100-fpv-motor.html"]
+    },
+    "p8": {
+      "misc_weight_g": 42,
+      "misc_weight_range_g": [30, 55],
+      "typical_auw_g": [1000, 2000],
+      "typical_tw": [3, 7],
+      "typical_flight_min": [10, 25],
+      "typical_battery": "6S 3000-6000 mAh Li-ion or LiPo, XT60 (XT90 on cinelifters)",
+      "notes": "Few complete 8in BNFs in the store catalogs. Built up from parts: frames 270-380 g (Mark4/Chimera9 class), 2810 1100KV with 8in props ~2600 g max thrust per motor; iFlight Centurion X8 cinelifter frame alone is 969 g. Values are estimates (not re-verified in this pass).",
+      "est": ["misc_weight_g", "typical_auw_g", "typical_tw", "typical_flight_min"],
+      "sources": ["https://www.ligpower.com/product/f100-fpv-motor.html", "https://shop.iflight.com/Chimera9-ECO-Frame-Kit-Pro2080", "https://shop.iflight.com/Centurion-X8-cinelifter-Frame-kit-Pro2182"]
+    },
+    "p10": {
+      "misc_weight_g": 55,
+      "misc_weight_range_g": [40, 70],
+      "typical_auw_g": [1500, 2600],
+      "typical_tw": [3, 7],
+      "typical_flight_min": [15, 30],
+      "typical_battery": "6S 5000-8000 mAh (LiPo 5600 or Li-ion 8000), XT60/XT90; 8S on some",
+      "notes": "iFlight Helion 10 (O4 Pro): 1072 g dry, ~1912 g takeoff with 6S 8000 mAh; hover ~26 min on 6S 5600 LiPo / ~30 min on 6S 8000 Li-ion; cruise 23-26 min; ships with an XT90 adapter. T-Motor V3115 900KV + 10in: 4605 g max thrust per motor at 23 V.",
+      "est": ["misc_weight_g", "typical_tw"],
+      "sources": ["https://www.racedayquads.com/products/iflight-2raw-helion-10-long-range-10-6s-bnf-hd-w-dji-o4-pro", "https://www.ligpower.com/product/V3115-fpv-motor.html"]
+    },
+    "p13": {
+      "misc_weight_g": 85,
+      "misc_weight_range_g": [60, 110],
+      "typical_auw_g": [2500, 5000],
+      "typical_tw": [2.5, 7],
+      "typical_flight_min": [4, 15],
+      "typical_battery": "6S-12S 3000-10000 mAh, XT90 / AS150 / XT150",
+      "notes": "Estimates (not re-verified in this pass). X-class motors: iFlight XING X5215 330KV 356 g each, 4-8S, 76 A max; XING X4214 400KV. 13in props (Gemfan/HQ 13x8x3 to 13x12x3) on 25x25/30x30 M4 mounts with M6 shafts. Heavy-lift builds sit at the low T/W end, X-class racers at the high end. DJI O4 Pro/O3 input tops out at 26.4 V (6S): 8S-12S builds need a separate regulator for the air unit.",
+      "est": ["misc_weight_g", "typical_auw_g", "typical_tw", "typical_flight_min"],
+      "sources": ["https://www.getfpv.com/iflight-xing-5215-330kv-x-class-motor-1pc.html", "https://shop.iflight.com/xing-x4214-2-8s-x-class-fpv-nextgen-motor-pro802", "https://www.getfpv.com/gemfan-13x10x3-x-class-propellers-white-set-of-2.html", "https://www.dji.com/o4-air-unit/specs"]
+    },
+    "p15": {
+      "misc_weight_g": 100,
+      "misc_weight_range_g": [70, 130],
+      "typical_auw_g": [3000, 4500],
+      "typical_tw": [4, 8],
+      "typical_flight_min": [3, 8],
+      "typical_battery": "8S-12S 1300-3300 mAh LiPo, XT90 / AS150",
+      "notes": "Estimates (not re-verified in this pass). iFlight iXC15 950 mm X-class frame 643 g (no TPU), 19x19-25x25 motor mounts. 4 x X5215 (356 g) = 1.4 kg of motors before props, ESCs, battery. Typical 8S 1300-1550 mAh packs weigh 240-330 g; larger packs for longer races. 8S+ exceeds every digital air unit's input range (max 26.4 V) - use a BEC.",
+      "est": ["misc_weight_g", "typical_auw_g", "typical_tw", "typical_flight_min"],
+      "sources": ["https://shop.iflight.com/ixc15-950mm-x-class-racing-frame-pro695", "https://www.getfpv.com/iflight-xing-5215-330kv-x-class-motor-1pc.html", "https://www.racedayquads.com/products/gaoneng-gnb-29-6v-8s-1530mah-160c-lipo-battery-xt60"]
+    }
+  },
+
+  "misc_component_weights": {
+    "notes": [
+      "Battery strap: 3 g (Ethix V2 20x230, RDQ 180x10 Kevlar) to 7.5 g (Lumenier Kevlar 20x250).",
+      "XT60H connector: 3.5 g each (GetFPV listing, not re-fetchable); XT30 and capacitors ship at 1-5 g (store shipping weights).",
+      "Low-ESR capacitor 470-1000 uF 35-50 V: ~2-5 g.",
+      "5.8 GHz antennas: Lumenier AXII 2 U.FL 2.4 g, MMCX 3 g, right-angle stubby 6.7 g, Foxeer Lollipop V4 4.5 g; DJI O3 antenna ~3 g; DJI O4 antenna ~0.75 g; DJI O4 Pro antenna ~2.1 g; Walksnail V2 antenna 2 g; TBS Immortal T 2.4 GHz RX antenna 0.84 g; TrueRC Singularity 915 MHz SMA 24 g; tiny-whoop SMOL antenna 0.25 g.",
+      "Standoffs: HQ M3 1-2.5 g each; Matek M2 soft-mount 1.1 g each."
+    ],
+    "sources": [
+      "https://www.racedayquads.com/products/ethix-v2-lipo-strap-4pc",
+      "https://www.racedayquads.com/products/rdq-180mm-kevlar-micro-battery-strap-w-woven-rubber-grip-metal-buckle-3pk",
+      "https://www.racedayquads.com/products/lumenier-indestructible-kevlar-lipo-strap-20x250mm-3pcs",
+      "https://www.getfpv.com/amass-xt60h-power-connectors-male-female-5-sets-10-pcs.html",
+      "https://www.racedayquads.com/products/panasonic-1000uf-35v-low-esr-capacitor-for-noise-reduction",
+      "https://www.racedayquads.com/products/lumenier-axii-2-u-fl-5-8ghz-antenna-lhcp-rhcp",
+      "https://www.racedayquads.com/products/lumenier-axii-2-mmcx-5-8ghz-antenna-choose-polarization",
+      "https://www.racedayquads.com/products/lumenier-axii-2-right-angle-stubby-5-8ghz-antenna-rhcp-or-lhcp",
+      "https://www.racedayquads.com/products/foxeer-lollipop-v4-5-8ghz-90-mmcx-antenna-set-of-2-rhcp",
+      "https://www.racedayquads.com/products/dji-03-air-unit-antenna",
+      "https://www.dji.com/o4-air-unit/specs",
+      "https://www.caddxfpv.com/products/walksnail-avatar-hd-kit-v2-dual-antenna",
+      "https://www.racedayquads.com/products/tbs-tracer-immortal-t-2-4ghz-80mm-u-fl-linear-antenna",
+      "https://www.racedayquads.com/products/truerc-singularity-915mhz-sma-antenna-rhcp",
+      "https://www.fpvknowitall.com/fpv-shopping-list-tiny-whoop/",
+      "https://www.racedayquads.com/products/hq-prop-m3-hex-standoff-4-pack-choose-size",
+      "https://www.racedayquads.com/products/matek-m2-x-5mm-anti-vibration-standoff-soft-mount-4-pack"
+    ]
+  },
+
+  "battery": {
+    "usable_fraction": {"LiPo": 0.8, "LiHV": 0.8, "Li-ion": 0.85},
+    "loaded_cell_v": {"LiPo": 3.7, "LiHV": 3.8, "Li-ion": 3.5},
+    "full_cell_v": {"LiPo": 4.2, "LiHV": 4.35, "Li-ion": 4.2},
+    "min_cell_v": {"LiPo": 3.5, "LiHV": 3.5, "Li-ion": 2.5},
+    "notes": [
+      "LiPo: 4.2 V full, 3.7 V nominal; LiHV: 4.35 V full, 3.8 V storage/nominal. LiHV gives more power early but drops off abruptly; LiPo discharge is more linear (GetFPV).",
+      "Land LiPo at a minimum of ~3.5 V/cell resting (3.65 V is safest) and store at 3.8 V/cell (GetFPV). Landing there leaves roughly 15-20% in the pack, hence the 0.8 usable-capacity rule of thumb (derived, not a published figure).",
+      "Li-ion 21700 cells: 3.6 V rated, 4.2 V charge cut-off, 2.5 V discharge cut-off, 70 A continuous / 120 A burst (Lumenier NAV listings). Flying Li-ion down to ~3.0 V/cell uses more of the capacity, so 0.85 usable; loaded voltage ~3.5 V/cell is an estimate below the 3.6 V rating.",
+      "C rating x capacity = theoretical max continuous current (GetFPV). Most packs can exceed it for ~10 s; GetFPV suggests 70C+ for 220-size quads and sizing so ~75% of max motor current fits the per-motor share.",
+      "LiPo C ratings are marketing: a 1300 mAh '150C (burst 250C)' pack implies 195 A continuous, more than 3x the 60 A rated current GetFPV lists for the XT60H connector it ships with. A common heuristic (used in compat.js) is to trust ~half the printed LiPo rating; that factor is a heuristic, not a published number.",
+      "Li-ion packs publish real amp limits instead of inflated C: 6S 4500 mAh 21700 S70 = 70 A continuous (~15.6C); 4S 3000 mAh 18650 V45 = 45 A continuous (208 g); Lumenier NAV 21700 cells 70 A continuous / 120 A burst.",
+      "HV packs wear faster than standard 4.20 V packs - charge right before flying and store at storage voltage (fpvknowitall).",
+      "Typical pack weight anchors: 1S 300 mAh ~8 g, 1S 480 mAh ~12.6 g, 2S 450 mAh ~28 g, 4S 850 mAh ~100-110 g, 6S 1300 mAh ~220 g, 4S1P 18650 3000 mAh ~208 g, 6S 4500 mAh Li-ion ~428 g, 6S 8000 mAh Li-ion ~1 kg (see batteries-small/large research)."
+    ],
+    "sources": [
+      "https://www.getfpv.com/learn/new-to-fpv/all-about-multirotor-fpv-drone-battery/",
+      "https://www.racedayquads.com/products/lumenier-nav-5000mah-6s-21700-lithium-ion-battery-xt60-ndaa",
+      "https://www.racedayquads.com/products/lumenier-nav-10000mah-6s-21700-lithium-ion-battery-xt60-ndaa",
+      "https://www.racedayquads.com/products/lumenier-n2o-feather-lite-1300mah-6s-150c-lipo-battery-xt-60",
+      "https://www.getfpv.com/amass-xt60h-power-connectors-male-female-5-sets-10-pcs.html",
+      "https://www.racedayquads.com/products/auline-21700-s70-4500mah-6s-22-2v-70a-li-ion-battery-xt60",
+      "https://www.racedayquads.com/products/auline-18650-v45-4s-3000mah-14-8v-45a-li-ion-battery-xt60",
+      "https://www.fpvknowitall.com/fpv-shopping-list-sub-250g-drones-and-parts/",
+      "https://www.fpvknowitall.com/fpv-shopping-list-tiny-whoop/"
+    ]
+  },
+
+  "mounting": {
+    "notes": [
+      "Stack / board patterns: 16x16 (M2/M3 micro boards; O3 adapter plates exist for 20x20 -> 16x16), 20x20 (M2, or M3/M4 holes with rubber grommets down to M2), 25.5x25.5 (whoop AIOs and most whoop/1S digital VTXs), 30.5x30.5 (M3, 5in and up). A smaller board on a larger pattern needs an adapter plate; a larger board will not fit a smaller pattern.",
+      "Digital VTX patterns: O4 25.5x25.5 (RDQ; DJI FAQ loosely says '30 x 30 mm'); O4 Pro 20x20 or 25.5x25.5; O3 25.5x25.5; Vista 20x20; Walksnail Pro/V2/Moonlight/GT/GT2 20x20 or 25.5x25.5; Walksnail Nano Kit V3 25.5x25.5 (M2) or 20x20 (M3 holes); Walksnail Mini 1S 25.5x25.5; HDZero Race V3 (M4 grommeted) and Freestyle V2 20x20; HDZero Whoop V2/Lite/ECO 25.5x25.5; Wyvern Link 25.5 (Alpha V2 also 20x20); WiFiLink 2 25.5x25.5.",
+      "Motor patterns by stator: 0702-0802 whoop motors use the whoop (W1S) 1S pattern with 1 mm shafts; 1002-1102 (and some 1103) use the 3-hole 6.6 mm micro pattern with 1.5 mm shafts; 1103/1104/1202.5/1204/1303/1404 and T-Motor P1604 use 9x9 M2; 1507/1804/2004/2105.5/2205 use 12x12 M2 (some 3.6in frames list 12x12 for 14xx-class motors); 2207/2306/2306.5/2506/2507 use 16x16 M3; 2806.5/2807/2810/3110/3115/3220 use 19x19 M3 (a few 2306s, e.g. EMAX E3, also 19x19); X-class 4214/4215/5215 use 30x30 M4 (some 25x25).",
+      "Shafts/hubs: whoop props press onto 1 mm (0702/0802) or 1.5 mm (1002-1404) shafts; 1.5in-2.5in class 2004/1604 motors often use T-mount; 5in and larger use M5 threaded shafts; X-class motors use M6.",
+      "Camera widths: nano 14 mm, micro 19 mm, mini 22 mm, full 28 mm. Most 3in-5in frames are sized for 19 mm micro cameras (fpvknowitall); many 5in-7in frames also take 20 mm DJI/O3 cameras.",
+      "Digital camera widths: DJI O4 module 13.44 x 12.36 mm -> 14 mm nano slots via O4 adapter plates/cases or Flywoo 18/20 mm shells; DJI O4 Pro 20 mm wide but 25.55 mm deep and 23.3 mm tall; DJI O3 20 mm (frames list '20mm (DJI and O3 camera)'); Walksnail Pro/V2/GT/GT2 cameras 19 mm (Moonlight 19.6 x 19 x 24 mm); Walksnail Mini 1S / Nano V3 / Lite cameras 14 mm; HDZero Nano V3/Lux/Eco/Nano 90 14 mm (Nano V3 and Lux are listed L14 x W16 x H14; Nano 90 ships with a 19 mm bracket in the Freestyle V2 kit); HDZero Micro V3 19 mm; OpenIPC IMX415 modules on WiFiLink 2 and Wyvern Alpha V2 19 mm (Wyvern 200 mW camera size unpublished; its 100 mW Alpha sibling lists 14 mm).",
+      "Adapter plates bridge O4 cameras into O3/19-20 mm mounts (e.g. Brain3D O4-to-O3 adapter, Lumenier O4 adapter plates, Flywoo O4 Wide-Angle Lens 'O3 / 20mm' shell)."
+    ],
+    "sources": [
+      "https://www.racedayquads.com/products/flywoo-dji-o3-air-unit-20x20-16x16-adapter-plate-3-pcs",
+      "https://www.racedayquads.com/products/newbeedrone-dji-o3-air-unit-20x20-adapter-mount",
+      "https://www.hd-zero.com/product-page/hdzero-race-v3-vtx",
+      "https://www.racedayquads.com/products/hdzero-whoop-v2-vtx",
+      "https://www.racedayquads.com/products/dji-o4-air-unit",
+      "https://www.dji.com/o4-air-unit/faq",
+      "https://www.racedayquads.com/products/dji-o4-air-unit-pro",
+      "https://www.racedayquads.com/products/caddx-nebula-pro-vista-kit-w-12cm-cable-black",
+      "https://www.caddxfpv.com/products/walksnail-avatar-hd-pro-kit-dual-antenna",
+      "https://www.caddxfpv.com/products/walksnail-moonlight-kit-only",
+      "https://www.caddxfpv.com/products/walksnail-avatar-hd-mini-1s-kit",
+      "https://www.racedayquads.com/products/walksnail-avatar-hd-nano-v3-vtx-kit-w-nano-camera",
+      "https://www.racedayquads.com/products/emax-wyvern-link-alpha-v2-800mw-vtx-w-openipc-aluminum-case",
+      "https://www.racedayquads.com/products/emax-wyvern-link-alpha-openipc-100mw-vtx",
+      "https://www.racedayquads.com/products/runcam-wifilink-2-w-openipc",
+      "https://betafpv.com/products/0702-ii-brushless-motors",
+      "https://www.racedayquads.com/products/flywoo-robo-1002-19800kv-micro-motor",
+      "https://www.ligpower.com/product/m1103-fpv-motor.html",
+      "https://www.racedayquads.com/products/iflight-xing2-1404-3000kv-micro-motor",
+      "https://www.racedayquads.com/products/t-motor-pacer-1604-2850kv-motor",
+      "https://www.racedayquads.com/products/brotherhobby-vy-1507-4150v-micro-motor",
+      "https://www.racedayquads.com/products/emax-eco-ii-2004-3000kv-motor",
+      "https://www.getfpv.com/t-motor-velox-v2207-v3-motor-1500kv-1750kv-1950kv-2550kv.html",
+      "https://www.racedayquads.com/products/emax-e3-series-2306-motor-1700kv-1900kv-2400kv",
+      "https://www.racedayquads.com/products/emax-eco-ii-2807-1300kv-motor",
+      "https://shop.iflight.com/XING2-3110-FPV-Cinelifter-Motor-Unibell-Pro1683",
+      "https://shop.iflight.com/xing-x5215-x-class-fpv-nextgen-motor-pro857",
+      "https://www.brotherhobbystore.com/products/tornado-t10-5215-motor",
+      "https://www.racedayquads.com/products/axisflying-manta-3-6-bnf-drone-w-walksnail-avatar-pro-elrs-2-4ghz",
+      "https://www.fpvknowitall.com/fpv-shopping-list-sub-250g-drones-and-parts/",
+      "https://www.lumenier.com/products/lumenier-qav-r-2c-frame-kit-7",
+      "https://www.racedayquads.com/products/foxeer-razer-v2-mini-1200tvl-4-3-pal-nstc-cmos-fpv-camera-2-1mm-black",
+      "https://www.newbeedrone.com/products/hdzero-nano-v3-camera",
+      "https://www.racedayquads.com/products/hdzero-lux-camera",
+      "https://www.newbeedrone.com/products/hdzero-micro-v3-camera",
+      "https://www.racedayquads.com/products/iflight-aos-7-evo-7-v1-2-frame-kit",
+      "https://www.racedayquads.com/products/brain3d-camera-adapter-for-dji-o4-air-unit-to-dji-o3-mounting",
+      "https://www.racedayquads.com/products/lumenier-camera-adapter-plates-for-dji-o4-air-unit-2pcs-standard",
+      "https://www.racedayquads.com/products/flywoo-o4-wide-angle-lens-o3-20mm",
+      "https://www.racedayquads.com/products/flywoo-dji-o4-wide-air-unit-set"
+    ]
+  },
+
+  "connectors": {
+    "by_class": {
+      "w65": ["BT2.0", "PH2.0", "A30", "GNB27"],
+      "w75": ["BT2.0", "A30", "GNB27", "XT30"],
+      "p2": ["XT30", "BT2.0", "GNB27"],
+      "p25": ["XT30"],
+      "p3": ["XT30"],
+      "p35": ["XT30", "XT60"],
+      "p4": ["XT30", "XT60"],
+      "p5": ["XT60"],
+      "p6": ["XT60"],
+      "p7": ["XT60"],
+      "p8": ["XT60", "XT90"],
+      "p10": ["XT60", "XT90"],
+      "p13": ["XT90", "AS150"],
+      "p15": ["XT90", "AS150"]
+    },
+    "ratings_a": {
+      "PH2.0": {"cont": 4.5},
+      "BT2.0": {"cont": 9, "burst": 15},
+      "GNB27": {"cont": 9, "burst": 15},
+      "A30": {"cont": 15, "burst": 30},
+      "XT60": {"cont": 60, "burst": 100},
+      "XT90": {"cont": 50, "burst": 90},
+      "XT150": {"cont": 150}
+    },
+    "notes": [
+      "1S whoops: PH2.0 supports only 4.5 A continuous; BT2.0 and GNB27 support 9 A continuous / 15 A burst; A30 15 A standard / 30 A peak (Gaoneng listing). BT2.0 'gives significantly lower resistance ... and less voltage drop' than even solid-pin PH2.0 (fpvknowitall). Fly on the drone's native plug - adapters are fine for charging only.",
+      "Toothpicks and 2-4S micros: 'XT30 is the best all-around choice'; GNB27 saves weight; avoid PH2.0 (fpvknowitall). Flywoo/DeepSpace 2-3in BNFs ship with XT30.",
+      "3S-6S 5in-10in: XT60 is on 'about 95%' of 220-size quads (GetFPV). Amass XT60H: 0.8 mOhm, 60 A rated / 100 A max, 3.5 g each per GetFPV (not re-fetchable; HTTP 403). Some 3.5in 6S cinewhoops (CineApe 35, Axisflying C35) already use XT60.",
+      "10in+, cinelifters and X-class: XT90 (the RDQ-listed XT90 V2 is 50 A rated / 90 A max - note this is lower than the XT60H figure above because the two come from different vendors' rating methods) and AS150/XT150 (150 A) - e.g. Lumenier CineLifter and Tattu G-Tech packs ship with AS150 or XT90-S.",
+      "XT30 current rating was not stated on the listings checked; treat it as the step below XT60.",
+      "FC-ESC 8-pin harnesses: usually JST-SH 1.0 mm on ESCs, sometimes JST-GH on the FC side (Lumenier LUX H743 includes GH-to-SH 8-pin cables). Same plug, different wire order between brands: Lumenier ESCs are VBAT, GND, CURR, TLM, M1, M2, M3, M4; Flywoo GOKU 406S is GND, BAT, M1, M2, M3, M4, CUR; iFlight BLITZ Mini F4 prints CUR/M4/M3/M2/M1/BAT/G. A straight cable between mismatched brands can put battery voltage on a signal or ground pin, so compare both pinouts and re-pin the cable (or solder) when they differ. Same-brand stacks ship with a matching cable.",
+      "Octo/X8 setups: FCs like the Matek H7A3-SLIM provide two 8-pin ESC ports for two 4-in-1 ESCs.",
+      "HD VTX power/data: HDZero Whoop V2 ships with a 'Betaflight standard digital VTX plug' harness; Walksnail GT2 uses a JST1.0 6-pin power cable; Walksnail Nano V3 uses JST1.0 4-pin power; DJI O3/O4 use DJI's 3-in-1 cable; some FCs (e.g. SpeedyBee AIO F4) plug straight into O3/Vista/RunCam Link without re-pinning - check the FC's HD connector pinout before plugging in."
+    ],
+    "sources": [
+      "https://www.racedayquads.com/products/betafpv-bt2-0-1s-whoop-connector-male-female-set-5-pack",
+      "https://www.racedayquads.com/products/gnb27-connector-5-pack-choose-version",
+      "https://www.racedayquads.com/products/gaoneng-gnb-a30-connector-male-5-pack-1",
+      "https://www.fpvknowitall.com/fpv-shopping-list-tiny-whoop/",
+      "https://www.fpvknowitall.com/fpv-shopping-list-toothpick-fpv-drones-and-parts/",
+      "https://www.getfpv.com/learn/new-to-fpv/all-about-multirotor-fpv-drone-battery/",
+      "https://www.getfpv.com/amass-xt60h-power-connectors-male-female-5-sets-10-pcs.html",
+      "https://www.racedayquads.com/products/xt90-v2-connector",
+      "https://www.racedayquads.com/products/amass-xt150-w-6mm-gold-connector-1pc-choose-your-version-color",
+      "https://www.racedayquads.com/products/lumenier-5200mah-6s-120c-cinelifter-lipo-battery-as150",
+      "https://www.newbeedrone.com/products/tattu-g-tech-6000mah-6s-150c-lipo-battery-pack-with-as150-plug",
+      "https://www.racedayquads.com/products/darwinfpv-cineape-35-hd-bnf-w-o3-6s-elrs-2-4ghz",
+      "https://www.racedayquads.com/products/flywoo-firefly-25-mini-bnf-drone-w-dji-o4-wide",
+      "https://www.racedayquads.com/products/lumenier-razor-led-f4-55a-2-6s-am32-4-in-1-esc-30x30",
+      "https://www.racedayquads.com/products/lumenier-siege-g071-55a-3-6s-4-in-1-am32-esc-ndaa",
+      "https://www.racedayquads.com/products/flywoo-goku-406s-8bit-40a-2-6s-20x20-4in1-esc",
+      "https://www.newbeedrone.com/products/iflight-blitz-mini-f4-flight-controller",
+      "https://www.racedayquads.com/products/lumenier-lux-h743-flight-controller-ndaa",
+      "https://www.racedayquads.com/products/speedybee-bls-50a-3-6s-30x30-4in1-esc",
+      "https://www.racedayquads.com/products/speedybee-aio-f4-fc-40a-3-6s-4-in-1-bluejay-esc-25x25",
+      "https://www.racedayquads.com/products/mateksys-h7a3-slim-flight-controller-icm42688p-30x30",
+      "https://www.racedayquads.com/products/hdzero-whoop-v2-vtx",
+      "https://www.racedayquads.com/products/walksnail-avatar-gt2-kit",
+      "https://www.racedayquads.com/products/walksnail-avatar-hd-nano-v3-vtx-kit-w-nano-camera",
+      "https://www.racedayquads.com/products/dji-air-unit-03"
+    ]
+  }
+}
