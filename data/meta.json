@@ -1,19 +1,19 @@
 {
- "version": "2026.10.20-0101",
- "generated": "2026-10-20T00:40:10+00:00",
- "prices_checked": "2026-10-20T00:40:10+00:00",
+ "version": "2026.10.20-0155",
+ "generated": "2026-10-20T01:38:00+00:00",
+ "prices_checked": "2026-10-20T01:38:00+00:00",
  "parts": 772,
  "offers": 1724,
  "offer_stats": {
   "updated": 1124,
   "gone": 0,
   "redirected": 0,
-  "variant_missing": 2,
+  "variant_missing": 0,
   "errors": 0,
-  "getfpv_ok": 578,
+  "getfpv_ok": 599,
   "getfpv_gone": 1,
   "getfpv_error": 0,
-  "getfpv_aborted": true
+  "getfpv_aborted": false
  },
  "stores": {
   "rdq": {
