@@ -1,12 +1,12 @@
 {
- "version": "2026.10.20-0155",
- "generated": "2026-10-20T01:38:00+00:00",
- "prices_checked": "2026-10-20T01:38:00+00:00",
+ "version": "2026.11.01-0741",
+ "generated": "2026-11-01T07:21:34+00:00",
+ "prices_checked": "2026-11-01T07:21:34+00:00",
  "parts": 772,
  "offers": 1724,
  "offer_stats": {
-  "updated": 1124,
-  "gone": 0,
+  "updated": 1120,
+  "gone": 4,
   "redirected": 0,
   "variant_missing": 0,
   "errors": 0,
@@ -18,20 +18,20 @@
  "stores": {
   "rdq": {
    "name": "RaceDayQuads",
-   "products": 4818
+   "products": 4828
   },
   "newbee": {
    "name": "NewBeeDrone",
-   "products": 1620
+   "products": 1590
   },
   "five33": {
    "name": "FlyFive33",
-   "products": 788
+   "products": 793
   },
   "getfpv": {
    "name": "GetFPV",
    "products": 0
   }
  },
- "catalog_listings": 6987
+ "catalog_listings": 6972
 }
